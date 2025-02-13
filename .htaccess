@@ -1,0 +1,10 @@
+# Deshabilitar listado de directorios
+Options All -Indexes
+
+# Redirigir a páginas de error personalizadas
+ErrorDocument 404 /control_asistencia/src/views/errors/404.html
+ErrorDocument 403 /control_asistencia/src/views/errors/403.html
+
+# Habilita la reescritura de URLs
+RewriteEngine On
+RewriteRule ^([a-zA-Z0-9/]+)$ index.php?view=$1
