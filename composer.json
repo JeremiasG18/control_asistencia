@@ -1,0 +1,17 @@
+{
+    "name": "jeremias/control_asistencia",
+    "require": {
+        "phpoffice/phpspreadsheet": "^4.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "Jeremias\\ControlAsistencia\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Jeremias",
+            "email": "jeregonza194@gmail.com"
+        }
+    ]
+}
