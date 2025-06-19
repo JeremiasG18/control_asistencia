@@ -10,12 +10,34 @@
 
 </section>
 
-<section>
-    <select id="asistents">
+<section class="forms_control">
+    <select id="forms">
         <option value="0">Seleccione una planilla</option>
     </select>
-    <div class="asistents">
-        <h3>Asistentes</h3>
-    </div>
+    <form action="index.php" method="POST" class="fmSaveAsistents">
+        <input type="hidden" name="accion" value="saveAsistents">
+        <input type="hidden" name="id" class="idForm">
+        <table border="1">
+            <thead>
+                <tr>
+                    <td colspan="9">Asistentes</td>
+                </tr>
+                <tr>
+                    <td>Nombre y Apellido</td>
+                    <td>Fecha de Nacimiento</td>
+                    <td class="step">Bautismo</td>
+                    <td class="step">Encuentro</td>
+                    <td class="step">ABC</td>
+                    <td class="step">Nivel 1</td>
+                    <td class="step">Nivel 2</td>
+                    <td class="step">Mentores</td>
+                </tr>
+            </thead>
+            <tbody class="asistents">
+            </tbody>
+        </table>
+        <input type="button" value="Agregar Asistente" class="btnAddAsistent">
+        <input type="submit" value="Guardar">
+    </form>
 
 </section>

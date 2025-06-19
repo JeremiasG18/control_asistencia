@@ -19,6 +19,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         exit;
     }
 
+    if ($_POST['accion'] == 'saveAsistents') {
+        $file = new FileController();
+        $response = $file->saveAsistents($_POST['id'], $_POST['asistentes']);
+        echo json_encode($response);
+        // echo json_encode([$_POST['asistents']]);
+        exit;
+    }
+
 
 }else if($_SERVER['REQUEST_METHOD'] == 'GET'){
 
