@@ -31,9 +31,11 @@
                     <td class="step">Nivel 1</td>
                     <td class="step">Nivel 2</td>
                     <td class="step">Mentores</td>
+                    <td>Accion</td>
                 </tr>
             </thead>
             <tbody class="asistents">
+                <tr><td colspan="9">No se ha seleccionado una planilla</td></tr>
             </tbody>
         </table>
         <input type="button" value="Agregar Asistente" class="btnAddAsistent">

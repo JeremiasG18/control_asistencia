@@ -20,17 +20,33 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     if ($_POST['accion'] == 'saveAsistents') {
+
+        if (empty($_POST['id'])) {
+            echo json_encode(['status' => 'error', 'message' => 'No selecciono ningun excel']);
+            exit;
+        }
+
+        if (empty($_POST['asistentes'])){
+            echo json_encode(['status' => 'error', 'message' => 'No ingreso ningun asistente']);
+            exit;
+        }
+        
         $file = new FileController();
         $response = $file->saveAsistents($_POST['id'], $_POST['asistentes']);
         echo json_encode($response);
-        // echo json_encode([$_POST['asistents']]);
         exit;
     }
 
 
 }else if($_SERVER['REQUEST_METHOD'] == 'GET'){
 
-    if (!empty($_GET['file'])) {
+    if (isset($_GET['file'])) {
+
+        if ($_GET['file'] == 0){
+            echo json_encode(['status' => 'No se ha seleccionado una planilla']);
+            exit;
+        }
+
         $form = new FileController();
         $form = $form->showAsistents($_GET['file']);
         echo json_encode($form);

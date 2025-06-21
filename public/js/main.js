@@ -25,12 +25,19 @@ function show(data){
 
 // Mostrar asistentes
 function showAsistents(data){ 
-
-    const inputHidden = document.querySelector('.idForm');
-    inputHidden.setAttribute('value', data[0].id);
     const tbody = document.querySelector('.asistents');
 
     tbody.innerHTML = '';
+
+    if (data.status) {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td colspan="9">${data.status}</td>`;
+        tbody.append(tr);
+        return tbody;
+    }
+
+    const inputHidden = document.querySelector('.idForm');
+    inputHidden.setAttribute('value', data[0].id);
 
     for (let i = 0; i < data.length; i++) {
         const tr = document.createElement('tr');
@@ -87,12 +94,17 @@ function showAsistents(data){
                         : '<input type="checkbox" name="asistentes[' + i + '][mentores]">'
                     }
                 </td>
+                <td>
+                    <button type="button" class="btnDropAsistent">Eliminar</button>
+                </td>
             `;
             tbody.appendChild(tr);
             continue;
         }
 
     }
+
+    dropAsistent();
 
     return tbody;
 }
@@ -122,11 +134,8 @@ document.addEventListener('DOMContentLoaded', () => {
             })
             .then(response => response.json())
             .then(data =>{
-                if (data = 'sas'){
-                    console.log(data);
-                }else{
-                    show(data)
-                }
+                formFile.reset();
+                show(data);
             })
             .catch(error =>{
                 console.error('Error del servidor o de una mala solicitud: ' + error);
@@ -167,18 +176,31 @@ function addAsistent(){
     tbody.innerHTML += `
 
         <tr>
-            <td><input type="text" name="[${countRow}][nombre]"></td>
-            <td><input type="date" name="[${countRow}][fecha]"></td>
-            <td><input type="checkbox" name="[${countRow}][bautismo]"></td>
-            <td><input type="checkbox" name="[${countRow}][encuentro]"></td>
-            <td><input type="checkbox" name="[${countRow}][abc]"></td>
-            <td><input type="checkbox" name="[${countRow}][nivel1]"></td>
-            <td><input type="checkbox" name="[${countRow}][nivel2]"></td>
-            <td><input type="checkbox" name="[${countRow}][mentores]"></td>
+            <td><input type="text" name="asistentes[${countRow}][nombre]"></td>
+            <td><input type="date" name="asistentes[${countRow}][fecha]"></td>
+            <td><input type="checkbox" name="asistentes[${countRow}][bautismo]"></td>
+            <td><input type="checkbox" name="asistentes[${countRow}][encuentro]"></td>
+            <td><input type="checkbox" name="asistentes[${countRow}][abc]"></td>
+            <td><input type="checkbox" name="asistentes[${countRow}][nivel1]"></td>
+            <td><input type="checkbox" name="asistentes[${countRow}][nivel2]"></td>
+            <td><input type="checkbox" name="asistentes[${countRow}][mentores]"></td>
+            <td><button type="button" class="btnDropAsistent">Eliminar</button></td>
         </tr>
 
     `;
 
+    dropAsistent();
+
     return tbody;
     
+}
+
+function dropAsistent(){
+    const btnDropAsistent = document.querySelectorAll('.btnDropAsistent');
+    btnDropAsistent.forEach(btnDA => {
+        btnDA.addEventListener('click', () => {
+            const tr = btnDA.parentNode.parentNode;
+            tr.remove();
+        });
+    });
 }

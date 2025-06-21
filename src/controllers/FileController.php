@@ -2,6 +2,7 @@
 
 namespace Jeremias\ControlAsistencia\Controllers;
 use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class FileController{
@@ -166,37 +167,113 @@ class FileController{
 
         $destination = $this->searchFile($id);
 
-        return $asistents;
-
         if (!empty($destination['status'])) return $destination;
 
         $document = IOFactory::load($destination); // Cargar el Excel
         $hoja = $document->getActiveSheet();
 
-        $j = 0;
+        $j = 20;
+        $contador = 0;
+        $n = 1;
+        for ($i=14; $i < $j; $i++) { 
+            if ((str_replace($n . ")", '', (trim($hoja->getCell('A' . $i)->getValue()))) != '')) {
+                $contador++;
+                $n++;
+                continue;
+            }
+            break;
+        }
+
+        $estiloPersonalizado = [
+            [
+                'font' => [
+                    'name' => 'Calibri',
+                    'size' => 11,
+                ],
+                'alignment' => [
+                    'horizontal' => Alignment::HORIZONTAL_LEFT,  // eje X
+                    'vertical' => Alignment::VERTICAL_CENTER,      // eje Y
+                ],
+            ],
+            [
+                'font' => [
+                    'name' => 'Calibri',
+                    'size' => 11,
+                ],
+                'alignment' => [
+                    'horizontal' => Alignment::HORIZONTAL_CENTER,  // eje X
+                    'vertical' => Alignment::VERTICAL_CENTER,      // eje Y
+                ],
+            ]
+        ];
+
+        $j = 1;
         $asistentes = [];
+        $indice = 1;
 
-        return $asistents;
+        for ($i = 14; $i <= 14 + $contador; $i++) {
 
-        for ($i = 14; $i < 14 + count($asistents); $i++) {
-            $hoja->setCellValue('A' . $i, $j + 1 . ') ' . $asistents["nombre"][$j]);
-            $hoja->setCellValue('B' . $i, $j + 1 . ') ' . $asistents["fecha"][$j]);
-            $hoja->setCellValue('C' . $i, $j + 1 . ') ' . $asistents["bautismo"][$j]);
-            $hoja->setCellValue('D' . $i, $j + 1 . ') ' . $asistents["encuentro"][$j]);
-            $hoja->setCellValue('E' . $i, $j + 1 . ') ' . $asistents["abc"][$j]);
-            $hoja->setCellValue('F' . $i, $j + 1 . ') ' . $asistents["nivel1"][$j]);
-            $hoja->setCellValue('G' . $i, $j + 1 . ') ' . $asistents["nivel2"][$j]);
-            $hoja->setCellValue('H' . $i, $j + 1 . ') ' . $asistents["mentores"][$j]);
+            while ($j <= $contador){
+                if (empty($asistents[$j]['nombre']) && empty($asistents[$j]['fecha']) && empty($asistents[$j]['bautismo'])
+                && empty($asistents[$j]['encuentro']) && empty($asistents[$j]['abc']) && empty($asistents[$j]['nivel1'])
+                && empty($asistents[$j]['nivel2']) && empty($asistents[$j]['mentores'])) {
+                    $j++;
+                    continue;
+                }
 
-            // Limpiar el valor como hacías antes
-            $valor = trim(str_replace($j + 1 . ")", '', $hoja->getCell('A' . $i)->getValue()));
+                break;
 
-            if ($valor != '') {
-                $asistentes[] = $valor;
+            }
+            
+            if (!empty($asistents[$j]['nombre']) || !empty($asistents[$j]['fecha']) || !empty($asistents[$j]['bautismo'])
+            || !empty($asistents[$j]['encuentro']) || !empty($asistents[$j]['abc']) || !empty($asistents[$j]['nivel1'])
+            || !empty($asistents[$j]['nivel2']) || !empty($asistents[$j]['mentores'])) {
+                
+                $hoja->setCellValue('A' . $i, $indice . ') ' . (!empty($asistents[$j]['nombre']) ? $asistents[$j]['nombre'] : ''));
+                $hoja->getStyle('A' . $i)->applyFromArray($estiloPersonalizado[0]);
+                $hoja->setCellValue('B' . $i, (!empty($asistents[$j]['fecha']) ? $asistents[$j]['fecha'] : ''));
+                $hoja->getStyle('B' . $i)->applyFromArray($estiloPersonalizado[1]);
+                $hoja->setCellValue('C' . $i, (!empty($asistents[$j]['bautismo']) ? 'Si' : 'No'));
+                $hoja->getStyle('C' . $i)->applyFromArray($estiloPersonalizado[1]);
+                $hoja->setCellValue('D' . $i, (!empty($asistents[$j]['encuentro']) ? 'Si' : 'No'));
+                $hoja->getStyle('D' . $i)->applyFromArray($estiloPersonalizado[1]);
+                $hoja->setCellValue('E' . $i, (!empty($asistents[$j]['abc']) ? 'Si' : 'No'));
+                $hoja->getStyle('E' . $i)->applyFromArray($estiloPersonalizado[1]);
+                $hoja->setCellValue('F' . $i, (!empty($asistents[$j]['nivel1']) ? 'Si' : 'No'));
+                $hoja->getStyle('F' . $i)->applyFromArray($estiloPersonalizado[1]);
+                $hoja->setCellValue('G' . $i, (!empty($asistents[$j]['nivel2']) ? 'Si' : 'No'));
+                $hoja->getStyle('G' . $i)->applyFromArray($estiloPersonalizado[1]);
+                $hoja->setCellValue('H' . $i, (!empty($asistents[$j]['mentores']) ? 'Si' : 'No'));
+                $hoja->getStyle('H' . $i)->applyFromArray($estiloPersonalizado[1]);
+
+                $indice++;
+                
+            }else{
+
+                $hoja->setCellValue('A' . $i, $indice . ') ' . '');
+                $hoja->getStyle('A' . $i)->applyFromArray($estiloPersonalizado[0]);
+                $hoja->setCellValue('B' . $i, '');
+                $hoja->setCellValue('C' . $i, '');
+                $hoja->setCellValue('D' . $i, '');
+                $hoja->setCellValue('E' . $i, '');
+                $hoja->setCellValue('F' . $i, '');
+                $hoja->setCellValue('G' . $i, '');
+                $hoja->setCellValue('H' . $i, '');
+
+                $indice++;
+
             }
 
             $j++;
+
         }
+
+        // Limpiar el valor como hacías antes
+        // $valor = trim(str_replace($j + 1 . ")", '', $hoja->getCell('A' . $i)->getValue()));
+
+        // if ($valor != '') {
+        //     $asistentes[] = $valor;
+        // }
 
         // Guardar el archivo modificado
         $writer = new Xlsx($document);
